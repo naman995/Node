@@ -7,7 +7,7 @@ const PORT = process.env.PORT || 3000;
 
 app.use(bodyParser.json());
 
-const personRoutes = require("./routes/PersonRoutes");
+const personRoutes = require("./routes/personRoutes");
 const menuRoutes = require("./routes/menuRoutes");
 
 app.use("/person", personRoutes);
