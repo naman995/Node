@@ -1,20 +1,26 @@
 const express = require("express");
-const db = require("./db");
-const bodyParser = require("body-parser");
-require("dotenv").config();
 const app = express();
-const PORT = process.env.PORT || 3000;
+const db = require("./db");
+require("dotenv").config();
+const passport = require("./Auth");
 
+const bodyParser = require("body-parser");
 app.use(bodyParser.json());
+const PORT = process.env.PORT || 3000;
 
 // Middleware Function
 const logRequest = (req, res, next) => {
   console.log(
-    `[${new Date().toLocaleDateString()}] Request made to : ${req.originUrl}`
+    `[${new Date().toLocaleDateString()}] Request made to : ${req.originalUrl}`
   );
+  next();
 };
+app.use(logRequest);
 
-app.get("/", logRequest, (req, res) => {
+app.use(passport.initialize());
+const localMiddleWareAuth = passport.authenticate("local", { session: false });
+
+app.get("/", (req, res) => {
   res.send("Welcome to our hotel");
 });
 
@@ -26,4 +32,4 @@ const menuRoutes = require("./routes/menuRoutes");
 app.use("/person", personRoutes);
 app.use("/menuItems", menuRoutes);
 
-app.listen(3000);
+app.listen(PORT);
